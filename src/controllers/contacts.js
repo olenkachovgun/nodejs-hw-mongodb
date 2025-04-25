@@ -12,9 +12,10 @@ import { parseContactFilterParams } from '../utils/filters/parseContactFilterPar
 
 export const getContactsController = async (req, res) => {
   const paginationParams = parsePaginationParams(req.query);
-
   const sortParams = parseSortParams(req.query);
   const filters = parseContactFilterParams(req.query);
+
+  filters.userId = req.user._id;
 
   const data = await getAllContact({
     ...paginationParams,
@@ -43,7 +44,9 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const addContactsController = async (req, res) => {
-  const data = await addContact(req.body);
+  const userId = req.user._id;
+  const data = await addContact(req.body, userId);
+
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
@@ -65,8 +68,9 @@ export const patchContactsController = async (req, res) => {
 };
 
 export const deleteContactsController = async (req, res) => {
+  const userId = req.user._id;
   const { contactId } = req.params;
-  const contact = await deleteContactById(contactId);
+  const contact = await deleteContactById(contactId, userId);
   if (!contact) {
     throw createHttpError(404, `Contact ${contactId} not found`);
   }
