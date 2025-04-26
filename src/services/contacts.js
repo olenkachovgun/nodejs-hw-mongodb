@@ -40,8 +40,8 @@ export const getAllContact = async ({
   };
 };
 
-export const getContactById = (contactId) =>
-  ContactCollection.findOne({ _id: contactId });
+export const getContactById = (contactId, userId) =>
+  ContactCollection.findOne({ _id: contactId, userId });
 
 export const addContact = (payload, userId) => {
   const contact = ContactCollection.create({ ...payload, userId });
@@ -49,10 +49,14 @@ export const addContact = (payload, userId) => {
   return contact;
 };
 
-export const updateContact = async (_id, payload) => {
-  const data = await ContactCollection.findOneAndUpdate({ _id }, payload, {
-    new: true,
-  });
+export const updateContact = async (contactId, userId, payload) => {
+  const data = await ContactCollection.findOneAndUpdate(
+    { _id: contactId, userId },
+    payload,
+    {
+      new: true,
+    },
+  );
   return data;
 };
 
