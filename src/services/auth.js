@@ -30,11 +30,17 @@ export const registerUser = async (payload) => {
     throw createHttpError(409, 'Email already in use');
   }
   const hasPassword = await bcrypt.hash(password, 10);
-  
-  return await UserCollection.create({
+
+  const newUser = await UserCollection.create({
     ...payload,
-    password: hasPassword
+    password: hasPassword,
   });
+
+  // Видаляємо поле password з об'єкта
+  const userObject = newUser.toObject();
+  delete userObject.password;
+
+  return userObject;
 };
 
 export const loginUser = async (payload) => {
