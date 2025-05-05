@@ -1,0 +1,73 @@
+#/swagger/paths/students/post.yaml
+
+tags:
+  - Contacts
+summary: Create contact
+operationId: createContact
+description: 'Create a contact with payload'
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - _id
+          - name
+          - phoneNumber
+          - email
+          - isFavourite
+          - contactType
+          - userId
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: "Contact's phone Number"
+            type: string
+            example: 80997771177
+          email:
+            description: "Contact's email"
+            type: string
+            example: 'test@gmail.com'
+          isFavourite:
+            description: 'Is it favorite contact?'
+            type: boolean
+            example: true
+          contactType:
+            type: string
+            enum: ['work', 'home', 'personal']
+            example: 'personal'
+          photo:
+            description: "Contact's photo"
+            type: string
+            format: binary
+            example: 'https://res.cloudinary.com/dvkju24nw/image/upload/v1746347492/dgpyfw9rrb475c0wskci.jpg'
+responses:
+  '201':
+    description: Creates a contact
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a contact!
+            data:
+              type: object
+              $ref: ../../components/schemas/contact.yaml
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '400':
+    $ref: '../../components/responses/400.yaml'

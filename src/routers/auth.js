@@ -4,11 +4,14 @@ import { validateBody } from '../utils/validateBody.js';
 import {
   authLoginSchema,
   authRegisterSchema,
+  loginWithGoogleOAuthSchema,
   requestResetEmailSchema,
   resetPasswordSchema,
 } from '../validation/auth.js';
 import {
+  getGoogleOAuthUrlController,
   loginController,
+  loginWithGoogleController,
   logoutController,
   refreshController,
   registerController,
@@ -43,4 +46,11 @@ authRouter.post(
   ctrlWrapper(resetPasswordController),
 );
 
+authRouter.post('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
+
+authRouter.post(
+  '/confirm-oauth',
+  validateBody(loginWithGoogleOAuthSchema),
+  ctrlWrapper(loginWithGoogleController),
+);
 export default authRouter;
