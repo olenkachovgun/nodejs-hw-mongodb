@@ -13,6 +13,11 @@ import { TEMPLATES_DIR } from '../constants/index.js';
 import { SMTP } from '../constants/index.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 
+import {
+  getFullNameFromGoogleTokenPayload,
+  validateCode,
+} from '../utils/googleOAuth2.js';
+
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64'); //генеруємо рандомні байти та перетворюємо на str
   const refreshToken = randomBytes(30).toString('base64');
@@ -174,4 +179,28 @@ export const resetPassword = async (payload) => {
     { _id: user._id },
     { password: encryptedPassword },
   );
+};
+
+export const loginOrSignupWithGoogle = async (code) => {
+  const loginTicket = await validateCode(code);
+  const payload = loginTicket.getPayload();
+  if (!payload) throw createHttpError(401);
+
+  let user = await UserCollection.findOne({ email: payload.email });
+  if (!user) {
+    const password = await bcrypt.hash(randomBytes(10), 10);
+    user = await UserCollection.create({
+      email: payload.email,
+      name: getFullNameFromGoogleTokenPayload(payload),
+      password,
+      role: 'parent',
+    });
+  }
+
+  const newSession = createSession();
+
+  return await SessionCollection.create({
+    userId: user._id,
+    ...newSession,
+  });
 };
