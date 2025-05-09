@@ -194,11 +194,8 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "_id",
                   "name",
                   "phoneNumber",
-                  "email",
-                  "isFavourite",
                   "contactType",
                   "userId"
                 ],
