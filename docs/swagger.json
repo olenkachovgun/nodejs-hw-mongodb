@@ -12,6 +12,9 @@
   "servers": [
     {
       "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://nodejs-hw-mongodb-1-9ye8.onrender.com"
     }
   ],
   "tags": [
@@ -365,19 +368,11 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "_id",
-                  "name",
-                  "phoneNumber",
-                  "email",
-                  "isFavourite",
-                  "contactType",
-                  "userId"
-                ],
                 "properties": {
                   "name": {
                     "description": "Contact's name",
